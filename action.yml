@@ -1,0 +1,53 @@
+name: 'Get Labels Action'
+description: 'Get pull request or issue labels.'
+author: 'Hiroyuki Kusu'
+branding:
+  icon: 'bookmark'
+  color: 'yellow'
+inputs:
+  number:
+    description: ''
+    required: false
+    default: ${{ github.event.pull_request.number || github.event.issue.number }}
+  repository:
+    description: ''
+    required: false
+    default: ${{ github.repository }}
+  github-token:
+    description: ''
+    required: false
+    default: ${{ github.token }}
+outputs:
+  labels:
+    description: ''
+    value: ${{ steps.labels.outputs.labels }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Get labels
+      id: labels
+      shell: bash
+      env:
+        NUMBER: ${{ inputs.number }}
+        GH_REPO: ${{ inputs.repository }}
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: |
+        set -euo pipefail
+        
+        function validate_is_not_empty() {
+          if [ -z "$1" ]; then
+            echo "::error::Invalid argument: $2"
+            return 1
+          fi
+        }
+
+        validate_is_not_empty "$NUMBER" 'number'
+        validate_is_not_empty "$GH_REPO" 'repository'
+        validate_is_not_empty "$GH_TOKEN" 'github-token'
+
+        labels=$(gh pr view "$NUMBER" --json labels -q '.labels|map(.name)')
+
+        echo "labels: $labels"
+        
+        echo "::set-output name=labels::$labels"
+        echo "LABELS=$labels" >> $GITHUB_ENV

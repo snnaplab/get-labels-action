@@ -1,0 +1,28 @@
+name: CI
+
+on: push
+
+jobs:
+  ci:
+    name: Use this action for check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v3
+      - name: Use this action
+        id: labels
+        uses: ./
+        with:
+          number: 1
+      - name: Show result
+        run: |
+          echo '${{ steps.labels.outputs.labels }}'
+          echo '${{ env.LABELS }}'
+          echo "$LABELS"
+          echo '${{ steps.labels.outputs.LABELS }}'
+          echo '${{ env.labels }}' # this is not printed 
+          echo "$labels" # this is not printed
+      - name: Use result
+        run: |
+          echo ${{ contains(fromJSON(steps.labels.outputs.labels), 'help wanted') }}
+          echo ${{ contains(fromJSON(env.LABELS), 'help wanted') }}
