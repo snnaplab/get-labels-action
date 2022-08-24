@@ -15,7 +15,7 @@ This Action gets labels in real time.
 
 | Name           | Description                                                                                                                                   | Default | Required |
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------| --- |-------|
-| `number`       | Pull request or issue number. | `${{ github.event.pull_request.number || github.event.issue.number }}` | false |
+| `number`       | Pull request or issue number. Specify when changing from the default. | `${{ github.event.pull_request.number }}` or `${{ github.event.issue.number }}` | false |
 | `repository`   | Target repository name with owner, eg `snnaplab/get-labels-action`. Specify when accessing labels in a repository different from the workflow. | `${{ github.repository }}` | false |
 | `github-token` | Specify a personal access token (PAT) when targeting a repository different from the workflow.                                                | `${{ github.token }}` | false |
 
