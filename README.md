@@ -29,12 +29,24 @@ The result is also stored in the environment variable `LABELS`.
 
 ## Example
 
-### Run only if it contains a specific label
+### Run a step only if it contains a specific label
 
 ```yaml
 - uses: snnaplab/get-labels-action@v1
 - if: contains(fromJSON(env.LABELS), 'bug')
   run: ...
+```
+
+### Get label in bash
+
+```yaml
+- uses: snnaplab/get-labels-action@v1
+- run: |
+    for i in $(seq 0 $(($(echo '${{ env.LABELS }}' | jq length) - 1)))
+    do
+      label=$(echo '${{ env.LABELS }}' | jq -r .["$i"])
+      ...
+    done
 ```
 
 ## License
