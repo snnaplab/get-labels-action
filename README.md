@@ -44,7 +44,7 @@ The result is also stored in the environment variable `LABELS`.
 - run: |
     for i in $(seq 0 $(($(echo '${{ env.LABELS }}' | jq length) - 1)))
     do
-      label=$(echo '${{ env.LABELS }}' | jq -r .["$i"])
+      label=$(echo '${{ env.LABELS }}' | jq -r .[$i])
       ...
     done
 ```
